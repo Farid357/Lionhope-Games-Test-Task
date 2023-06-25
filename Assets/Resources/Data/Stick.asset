@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 398e84e8a14a45d4a43588793674d3b4, type: 3}
   m_Name: Stick
   m_EditorClassIdentifier: 
-  <Level>k__BackingField: 1
+  <Sprite>k__BackingField: {fileID: 21300000, guid: c80882942a86e4a45b5456e853a962d3, type: 3}
+  <Level>k__BackingField: 2
   <Chain>k__BackingField: 0

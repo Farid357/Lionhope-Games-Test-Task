@@ -8,7 +8,8 @@ namespace LionhopeGamesTest.Gameplay
         [SerializeField] private Tilemap _tileMap;
         [SerializeField] private Tile _tile;
         [SerializeField] private Tile _highlightedTile;
-
+        [SerializeField] private ItemsFactory _itemsFactory;
+        
         public IField Create()
         {
             const int width = 10;
@@ -23,7 +24,7 @@ namespace LionhopeGamesTest.Gameplay
                     cells[x, y] = new Cell(new CellView(_tileMap, position, _tileMap.GetTile(position), _highlightedTile));
                 }
             }
-            return new Field(cells, _tileMap);
+            return new Field(cells, _itemsFactory, _tileMap);
         }
     }
 }

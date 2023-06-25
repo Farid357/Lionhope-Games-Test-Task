@@ -13,18 +13,18 @@ namespace LionhopeGamesTest.Gameplay
             _results = new Collider2D[40];
         }
 
-        public bool IsEmpty(IItem exceptItem) => FindItem(exceptItem) == null;
+        public bool IsEmpty => FindItem() == null;
 
         public ICellView View { get; }
 
-        public IItem FindItem(IItem exceptItem)
+        public IItem FindItem()
         {
             Vector2 cellWorldPosition = View.Position;
             int size = Physics2D.OverlapCircleNonAlloc(cellWorldPosition, 1.2f, _results);
 
             for (int i = 0; i < size; i++)
             {
-                if (_results[i].TryGetComponent(out IItem item) && item != exceptItem)
+                if (_results[i].TryGetComponent(out IItem item))
                     return item;
             }
 
