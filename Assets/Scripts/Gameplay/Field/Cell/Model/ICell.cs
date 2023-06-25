@@ -1,9 +1,11 @@
 namespace LionhopeGamesTest.Gameplay
 {
-    public interface ICell : IReadOnlyCell
+    public interface ICell 
     {
-        void PutItem(IItem item);
+        bool IsEmpty { get; }
 
-        void Clear();
+        IItem Item { get; }
+
+        ICellView View { get; }
     }
 }

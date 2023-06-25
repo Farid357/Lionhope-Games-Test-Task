@@ -1,30 +1,31 @@
 using System;
+using UnityEngine;
 
 namespace LionhopeGamesTest.Gameplay
 {
     public class Cell : ICell
     {
-        private IItem _item;
-
         public Cell(ICellView view)
         {
             View = view ?? throw new ArgumentNullException(nameof(view));
         }
 
-        public bool IsEmpty => _item == null;
-
-        public IItem Item => IsEmpty ? throw new InvalidOperationException(nameof(IsEmpty)) : _item;
+        public bool IsEmpty => Item == null;
 
         public ICellView View { get; }
 
-        public void Clear()
+        public IItem Item
         {
-            _item = null;
-        }
+            get
+            {
+                Vector2 cellWorldPosition = View.Position;
+                Collider2D hit = Physics2D.OverlapCircle(cellWorldPosition,  1.2f);
 
-        public void PutItem(IItem item)
-        {
-            _item = item ?? throw new ArgumentNullException(nameof(item));
+                if (hit != null && hit.TryGetComponent(out IItem item))
+                    return item;
+
+                return null;
+            }
         }
     }
 }

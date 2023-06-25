@@ -6,5 +6,7 @@ namespace LionhopeGamesTest.Gameplay
     public class ItemData : ScriptableObject
     {
         [field: SerializeField] public int Level { get; private set; }
+        
+        [field: SerializeField] public Chain Chain { get; private set; }
     }
 }
