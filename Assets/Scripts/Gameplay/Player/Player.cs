@@ -1,8 +1,6 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using LionhopeGamesTest.Tools;
 using UnityEngine;
+using LionhopeGamesTest.Tools;
 
 namespace LionhopeGamesTest.Gameplay
 {
@@ -37,28 +35,23 @@ namespace LionhopeGamesTest.Gameplay
             if (Input.GetMouseButton(0) && IsMovingItem)
             {
                 _clickedItem.Teleport(_camera.ScreenToWorldPoint(Input.mousePosition));
-                List<ICell> neighbours = _field.FindBusyNeighbours(_clickedItem);
-                neighbours.RemoveAt(0);
 
-                if (_field.CanMerge(neighbours))
+                if (_field.IsItemInAnyOther(_clickedItem))
                 {
-                    neighbours.ForEach(cell => cell.View.Select());
+                    _field.SelectItemNeighbours(_clickedItem);
                 }
-
+                
                 else
                 {
                     _field.UnselectCells();
                 }
             }
 
-            if (Input.GetMouseButtonUp(0) && IsMovingItem)
-                Put(_clickedItem);
-        }
-
-        private void Put(IItem item)
-        {
-            _field.Put(item, _clickedItemStartPosition);
-            _clickedItem = null;
+            if (Input.GetMouseButtonUp(0) && IsMovingItem && _field.IsItemInAnyOther(_clickedItem))
+            {
+                _field.Put(_clickedItem, _clickedItemStartPosition);
+                _clickedItem = null;
+            }
         }
     }
 }

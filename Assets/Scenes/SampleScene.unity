@@ -505,8 +505,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443cb7d638d346a1a4afe4113e36c9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 621847823}
   <Data>k__BackingField: {fileID: 11400000, guid: 762b62a872b557d48a0a7b1ba1fd62e9, type: 2}
+--- !u!212 &621847823 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5410563057513519339, guid: 90341d078e95cdd4b9f60b51387c4af9, type: 3}
+  m_PrefabInstance: {fileID: 1633258721}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1000476646 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5410563057513519318, guid: 90341d078e95cdd4b9f60b51387c4af9, type: 3}
@@ -524,8 +529,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443cb7d638d346a1a4afe4113e36c9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 1000476655}
   <Data>k__BackingField: {fileID: 11400000, guid: 762b62a872b557d48a0a7b1ba1fd62e9, type: 2}
+--- !u!212 &1000476655 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5410563057513519339, guid: 90341d078e95cdd4b9f60b51387c4af9, type: 3}
+  m_PrefabInstance: {fileID: 1370814380935881441}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1235072622 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5410563057513519318, guid: 90341d078e95cdd4b9f60b51387c4af9, type: 3}
@@ -543,8 +553,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443cb7d638d346a1a4afe4113e36c9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 1235072631}
   <Data>k__BackingField: {fileID: 11400000, guid: 762b62a872b557d48a0a7b1ba1fd62e9, type: 2}
+--- !u!212 &1235072631 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5410563057513519339, guid: 90341d078e95cdd4b9f60b51387c4af9, type: 3}
+  m_PrefabInstance: {fileID: 1382246277}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1382246277
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -754,8 +769,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 443cb7d638d346a1a4afe4113e36c9f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 1814289887}
   <Data>k__BackingField: {fileID: 11400000, guid: 762b62a872b557d48a0a7b1ba1fd62e9, type: 2}
+--- !u!212 &1814289887 stripped
+SpriteRenderer:
+  m_CorrespondingSourceObject: {fileID: 5410563057513519339, guid: 90341d078e95cdd4b9f60b51387c4af9, type: 3}
+  m_PrefabInstance: {fileID: 588487663}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1814712237
 GameObject:
   m_ObjectHideFlags: 0
@@ -1967,7 +1987,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _tileMap: {fileID: 1814712240}
   _tile: {fileID: 11400000, guid: f70735a69c55f924599955c5f6b9a2a0, type: 2}
-  _highlightedTile: {fileID: 11400000, guid: e9ca2910ac4972a4ab68f492daa8b4cf, type: 2}
+  _highlightedTile: {fileID: 11400000, guid: 8bb346c588ce9154e9f02c4679914529, type: 2}
   _itemsFactory: {fileID: 1919832787}
 --- !u!4 &1919832784
 Transform:

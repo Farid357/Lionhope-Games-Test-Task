@@ -5,7 +5,7 @@ namespace LionhopeGamesTest.Gameplay
         bool IsEmpty { get; }
 
         IItem FindItem();
-
+        IItem FindItemExcept(IItem item);
         ICellView View { get; }
     }
 }

@@ -64,7 +64,7 @@ namespace LionhopeGamesTest.Tools
                     }
                 }
             }
-            
+
             return _neighbours;
         }
 
@@ -78,21 +78,15 @@ namespace LionhopeGamesTest.Tools
                 .Where(neighbour => !neighbour.IsEmpty && !_neighbours.Contains(neighbour)).ToList();
         }
 
-        private static ICell CellWith(ICell[,] cells, IItem item)
+        public static bool IsInAny(this ICell[,] cells, IItem item)
         {
             foreach (ICell cell in cells)
             {
-                if (!cell.IsEmpty && cell.FindItem() == item)
-                    return cell;
+                if (!cell.IsEmpty && cell.FindItemExcept(item) != null && cell.FindItemExcept(item).Position == item.Position)
+                    return true;
             }
 
-            throw new InvalidOperationException();
-        }
-
-        public static bool IsInAny(this ICell[,] cells, IItem item)
-        {
-            List<ICell> cellsList = cells.Cast<ICell>().ToList();
-            return cellsList.Any(cell => !cell.IsEmpty && cell.FindItem() != item && cell.FindItem().Position == item.Position);
+            return false;
         }
 
         private static bool InBounds(ICell[,] cells, Vector2Int position)
