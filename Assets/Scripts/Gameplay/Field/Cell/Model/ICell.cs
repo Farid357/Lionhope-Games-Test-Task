@@ -1,10 +1,10 @@
 namespace LionhopeGamesTest.Gameplay
 {
-    public interface ICell 
+    public interface ICell
     {
-        bool IsEmpty { get; }
+        bool IsEmpty(IItem except = null);
 
-        IItem Item { get; }
+        IItem FindItem(IItem exceptItem = null);
 
         ICellView View { get; }
     }

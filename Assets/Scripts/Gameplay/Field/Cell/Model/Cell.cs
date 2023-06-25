@@ -5,27 +5,30 @@ namespace LionhopeGamesTest.Gameplay
 {
     public class Cell : ICell
     {
+        private readonly Collider2D[] _results;
+
         public Cell(ICellView view)
         {
             View = view ?? throw new ArgumentNullException(nameof(view));
+            _results = new Collider2D[40];
         }
 
-        public bool IsEmpty => Item == null;
+        public bool IsEmpty(IItem exceptItem) => FindItem(exceptItem) == null;
 
         public ICellView View { get; }
 
-        public IItem Item
+        public IItem FindItem(IItem exceptItem)
         {
-            get
+            Vector2 cellWorldPosition = View.Position;
+            int size = Physics2D.OverlapCircleNonAlloc(cellWorldPosition, 1.2f, _results);
+
+            for (int i = 0; i < size; i++)
             {
-                Vector2 cellWorldPosition = View.Position;
-                Collider2D hit = Physics2D.OverlapCircle(cellWorldPosition,  1.2f);
-
-                if (hit != null && hit.TryGetComponent(out IItem item))
+                if (_results[i].TryGetComponent(out IItem item) && item != exceptItem)
                     return item;
-
-                return null;
             }
+
+            return null;
         }
     }
 }

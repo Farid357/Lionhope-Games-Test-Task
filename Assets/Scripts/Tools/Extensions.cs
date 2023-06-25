@@ -42,7 +42,7 @@ namespace LionhopeGamesTest.Tools
                {
                    var neighbour = cells[neighbourPosition.x, neighbourPosition.y];
            
-                   if (!neighbour.IsEmpty)
+                   if (!neighbour.IsEmpty())
                    {
                        neighbours.Add(neighbour);
                     //   neighbours.AddRange(cells.GetBusyNeighboursTo(neighbour));

@@ -28,15 +28,8 @@ namespace LionhopeGamesTest.Gameplay
                 if (_field.HasCell(hitPoint))
                 {
                     ICell cell = _field.GetCell(hitPoint);
-                    
-                    if (cell.IsEmpty)
-                    {
-                        _clickedItem = null;
-                        return;
-                    }
-
-                    _clickedItem = cell.Item;
-                    _clickedItemStartPosition = _clickedItem.Position;
+                    _clickedItem = cell.FindItem();
+                    _clickedItemStartPosition = _clickedItem?.Position ?? _clickedItemStartPosition;
                 }
             }
 
@@ -44,12 +37,12 @@ namespace LionhopeGamesTest.Gameplay
                 _clickedItem.Teleport(_camera.ScreenToWorldPoint(Input.mousePosition));
 
             if (Input.GetMouseButtonUp(0) && IsMovingItem)
-                PutItem();
+                Put(_clickedItem);
         }
 
-        private void PutItem()
+        private void Put(IItem item)
         {
-            List<ICell> neighbours = _field.FindBusyNeighbours(_clickedItem);
+            List<ICell> neighbours = _field.FindBusyNeighbours(item);
 
             if (_field.CanMerge(neighbours))
             {
@@ -58,7 +51,10 @@ namespace LionhopeGamesTest.Gameplay
 
             else
             {
-                _clickedItem.Teleport(_clickedItemStartPosition);
+                ICell cell = _field.GetCell(item.Position);
+                
+                if (!cell.IsEmpty(item))
+                    item.Teleport(_clickedItemStartPosition);
             }
 
             _clickedItem = null;

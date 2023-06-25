@@ -23,7 +23,7 @@ namespace LionhopeGamesTest.Gameplay
                     cells[x, y] = new Cell(new CellView(_tileMap, position, _tileMap.GetTile(position), _highlightedTile));
                 }
             }
-            return new Field(cells);
+            return new Field(cells, _tileMap);
         }
     }
 }
