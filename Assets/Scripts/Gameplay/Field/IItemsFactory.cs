@@ -4,6 +4,9 @@ namespace LionhopeGamesTest.Gameplay
 {
     public interface IItemsFactory
     {
-        void Create(ItemData mergeItemsData, Vector2 spawnPosition);
+        IItem Create(ItemData mergeItemsData, Vector2 spawnPosition);
+        
+        IItem CreateNextLevelItem(ItemData mergeItemsData, Vector2 spawnPosition);
+
     }
 }

@@ -17,23 +17,18 @@ namespace LionhopeGamesTest.Gameplay
 
         public ICellView View { get; }
 
-        public IItem FindItemExcept(IItem exceptItem)
+        public IItem FindItem()
         {
             Vector2 cellWorldPosition = View.Position;
-            int size = Physics2D.OverlapCircleNonAlloc(cellWorldPosition, 1.2f, _results);
+            int size = Physics2D.OverlapCircleNonAlloc(cellWorldPosition, 0.4f, _results);
 
             for (int i = 0; i < size; i++)
             {
-                if (_results[i].TryGetComponent(out IItem item) && item != exceptItem)
+                if (_results[i].TryGetComponent(out IItem item) && item != Player.ClickedItem)
                     return item;
             }
 
             return null;
-        }
-
-        public IItem FindItem()
-        {
-            return FindItemExcept(null);
         }
     }
 }

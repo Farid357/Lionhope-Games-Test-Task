@@ -11,5 +11,21 @@ namespace LionhopeGamesTest.Tools
 
             return number % 3;
         }
+        
+        public static int NewItemsCount(this int number)
+        {
+            double n = (-1f - number) / 6f * -1;
+
+            if (n % 1 == 0)
+                return (int)(n * 2);
+
+            var remainder = number % 3;
+
+            if (remainder > 0)
+            {
+                number -= remainder;
+            }
+            return number / 3;
+        }
     }
 }

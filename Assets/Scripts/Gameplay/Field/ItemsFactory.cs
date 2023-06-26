@@ -14,11 +14,19 @@ namespace LionhopeGamesTest.Gameplay
             _allItemsData = Resources.LoadAll("Data", typeof(ItemData)).Cast<ItemData>().ToArray();
         }
 
-        public void Create(ItemData mergeItemsData, Vector2 spawnPosition)
+        public IItem Create(ItemData mergeItemsData, Vector2 spawnPosition)
+        {
+            Item item = Instantiate(_prefab, spawnPosition, Quaternion.identity);
+            item.Init(mergeItemsData);
+            return item;
+        }
+
+        public IItem CreateNextLevelItem(ItemData mergeItemsData, Vector2 spawnPosition)
         {
             ItemData nextData = _allItemsData.First(data => data.Chain == mergeItemsData.Chain && data.Level == mergeItemsData.Level + 1);
             Item item = Instantiate(_prefab, spawnPosition, Quaternion.identity);
             item.Init(nextData);
+            return item;
         }
     }
 }

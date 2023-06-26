@@ -8,8 +8,7 @@ namespace LionhopeGamesTest.Tools
     {
         public static void Put(this IField field, IItem item, Vector2 startItemPosition)
         {
-            List<ICell> neighbours = field.FindBusyNeighbours(item);
-            Debug.Log($"Put {neighbours.Count + 1}");
+            List<ICell> neighbours = field.FindSameNeighbours(item);
             field.UnselectCells();
 
             if (field.CanMerge(neighbours))
@@ -17,6 +16,7 @@ namespace LionhopeGamesTest.Tools
                 field.Merge(neighbours);
                 item.Disable();
             }
+
             else if (field.IsItemInAnyOther(item))
             {
                 item.Teleport(startItemPosition);
@@ -25,13 +25,10 @@ namespace LionhopeGamesTest.Tools
 
         public static void SelectItemNeighbours(this IField field, IItem item)
         {
-            List<ICell> neighbours = field.FindBusyNeighbours(item);
-            neighbours.RemoveAt(0);
+            List<ICell> neighbours = field.FindSameNeighbours(item);
 
             if (field.CanMerge(neighbours))
-            {
                 neighbours.ForEach(cell => cell.View.Select());
-            }
         }
     }
 }

@@ -9,15 +9,16 @@ namespace LionhopeGamesTest.Gameplay
         [SerializeField] private Camera _camera;
 
         private IField _field;
-        private IItem _clickedItem;
         private Vector3 _clickedItemStartPosition;
+
+        public static IItem ClickedItem { get; private set; }
 
         public void Init(IField field)
         {
             _field = field ?? throw new ArgumentNullException(nameof(field));
         }
 
-        private bool IsMovingItem => _clickedItem != null;
+        private bool IsMovingItem => ClickedItem != null;
 
         private void Update()
         {
@@ -27,30 +28,30 @@ namespace LionhopeGamesTest.Gameplay
 
                 if (_field.HasCell(hitPoint))
                 {
-                    _clickedItem = _field.GetCell(hitPoint).FindItem();
-                    _clickedItemStartPosition = _clickedItem?.Position ?? _clickedItemStartPosition;
+                    ClickedItem = _field.GetCell(hitPoint).FindItem();
+                    _clickedItemStartPosition = ClickedItem?.Position ?? _clickedItemStartPosition;
                 }
             }
 
             if (Input.GetMouseButton(0) && IsMovingItem)
             {
-                _clickedItem.Teleport(_camera.ScreenToWorldPoint(Input.mousePosition));
+                ClickedItem.Teleport(_camera.ScreenToWorldPoint(Input.mousePosition));
 
-                if (_field.IsItemInAnyOther(_clickedItem))
+                if (_field.IsItemInAnyOther(ClickedItem))
                 {
-                    _field.SelectItemNeighbours(_clickedItem);
+                    _field.SelectItemNeighbours(ClickedItem);
                 }
-                
+
                 else
                 {
                     _field.UnselectCells();
                 }
             }
 
-            if (Input.GetMouseButtonUp(0) && IsMovingItem && _field.IsItemInAnyOther(_clickedItem))
+            if (Input.GetMouseButtonUp(0) && IsMovingItem && _field.IsItemInAnyOther(ClickedItem))
             {
-                _field.Put(_clickedItem, _clickedItemStartPosition);
-                _clickedItem = null;
+                _field.Put(ClickedItem, _clickedItemStartPosition);
+                ClickedItem = null;
             }
         }
     }

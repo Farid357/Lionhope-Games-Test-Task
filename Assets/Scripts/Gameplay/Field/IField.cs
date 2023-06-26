@@ -5,7 +5,7 @@ namespace LionhopeGamesTest.Gameplay
 {
     public interface IField
     {
-        List<ICell> FindBusyNeighbours(IItem item);
+        List<ICell> FindSameNeighbours(IItem item);
 
         bool IsItemInAnyOther(IItem item);
         

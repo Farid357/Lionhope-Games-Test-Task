@@ -20,7 +20,7 @@ namespace LionhopeGamesTest.Gameplay
             _tilemap = tilemap ? tilemap : throw new ArgumentNullException(nameof(tilemap));
         }
 
-        public List<ICell> FindBusyNeighbours(IItem item) => _cells.GetBusyNeighboursTo(item);
+        public List<ICell> FindSameNeighbours(IItem item) => _cells.FindSameNeighboursTo(item);
 
         public bool HasCell(Vector2 position) => _tilemap.HasTile(_tilemap.WorldToCell(position));
 
@@ -37,21 +37,21 @@ namespace LionhopeGamesTest.Gameplay
 
         public bool CanMerge(List<ICell> cells)
         {
-            if (cells.Count < 3)
+            if (cells.Count < 2)
                 return false;
-            
+
             ICell cell = cells.First();
 
             if (cell.IsEmpty)
                 return false;
 
-            Chain chain = cell.FindItem().Data.Chain;
-            int level = cell.FindItem().Data.Level;
+            IItem item = cell.FindItem();
+            int level = item.Data.Level;
 
             if (level == 3)
                 return false;
 
-            return cells.All(cell1 => !cell1.IsEmpty && cell1.FindItem().Data.Level == level && cell1.FindItem().Data.Chain == chain);
+            return cells.All(cell1 => !cell1.IsEmpty && cell1.FindItem().HasSameData(item));
         }
 
         public void Merge(List<ICell> cells)
@@ -61,9 +61,13 @@ namespace LionhopeGamesTest.Gameplay
 
             cells.ForEach(cell => cell.FindItem().Disable());
             ItemData itemData = cells.First().FindItem().Data;
-
-            for (int i = 0; i < (cells.Count + 1).LeftItemsCount(); i++)
+            int leftItemsCount = (cells.Count + 1).LeftItemsCount();
+         
+            for (int i = 0; i < leftItemsCount; i++)
                 _itemsFactory.Create(itemData, cells[i + 1].View.Position);
+
+            for (int i = 0; i < (cells.Count + 1).NewItemsCount(); i++)
+                _itemsFactory.CreateNextLevelItem(itemData, cells[leftItemsCount + i + 1].View.Position);
         }
 
         public void UnselectCells()

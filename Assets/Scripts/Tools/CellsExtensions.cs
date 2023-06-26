@@ -10,7 +10,7 @@ namespace LionhopeGamesTest.Tools
     {
         private static readonly List<ICell> _neighbours = new();
 
-        private static readonly Vector2Int[] _directions = new Vector2Int[]
+        private static readonly Vector2Int[] _directions =
         {
             Vector2Int.down,
             Vector2Int.up,
@@ -18,50 +18,40 @@ namespace LionhopeGamesTest.Tools
             Vector2Int.right,
         };
 
-        public static Vector2Int GetPositionTo(this ICell[,] cells, IItem item)
+        private static ICell GetCellWithSameItemPosition(this ICell[,] cells, IItem item, out Vector2Int positionInArray)
         {
             for (int x = 0; x < cells.GetLength(0); x++)
             {
                 for (int y = 0; y < cells.GetLength(1); y++)
                 {
-                    if (!cells[x, y].IsEmpty && cells[x, y].FindItem().Equals(item))
-                        return new Vector2Int(x, y);
+                    if (cells[x, y].FindItem() != null && cells[x, y].FindItem().Position == item.Position)
+                    {
+                        positionInArray = new Vector2Int(x, y);
+                        return cells[x, y];
+                    }
                 }
             }
 
             throw new InvalidOperationException($"Hasn't found position to {item}");
         }
 
-        public static List<ICell> GetBusyNeighboursTo(this ICell[,] cells, IItem item)
+        public static List<ICell> FindSameNeighboursTo(this ICell[,] cells, IItem item)
         {
             _neighbours.Clear();
-            Vector2Int placedOnCellPosition = GetPositionTo(cells, item);
-            _neighbours.Add(cells[placedOnCellPosition.x, placedOnCellPosition.y]);
-            return GetBusyNeighboursToLoop(cells, item);
+            _neighbours.Add(GetCellWithSameItemPosition(cells, item, out _));
+            return GetBusyNeighboursToLoop(cells, item).Where(cell => cell.FindItem().Data.Level < 3 && cell.FindItem().HasSameData(item)).ToList();
         }
 
         private static List<ICell> GetBusyNeighboursToLoop(this ICell[,] cells, IItem item)
         {
-            Vector2Int position = cells.GetPositionTo(item);
-
-            foreach (var direction in _directions)
+            foreach (var neighbour in cells.GetBusyNeighboursToLoopWithoutRepeat(item))
             {
-                var neighbourPosition = position + direction;
-                if (InBounds(cells, neighbourPosition))
+                _neighbours.Add(neighbour);
+                List<ICell> neighboursToNeighbour = cells.GetBusyNeighboursToLoopWithoutRepeat(neighbour.FindItem());
+
+                foreach (ICell cell in neighboursToNeighbour)
                 {
-                    var neighbour = cells[neighbourPosition.x, neighbourPosition.y];
-
-                    if (!neighbour.IsEmpty && !_neighbours.Contains(neighbour))
-                    {
-                        _neighbours.Add(neighbour);
-                        List<ICell> neighboursToNeighbour = cells.GetBusyNeighboursToLoopWithoutRepeat(neighbour.FindItem());
-
-                        foreach (ICell cell in neighboursToNeighbour)
-                        {
-                            if (!_neighbours.Contains(cell))
-                                _neighbours.Add(cell);
-                        }
-                    }
+                    _neighbours.Add(cell);
                 }
             }
 
@@ -70,19 +60,28 @@ namespace LionhopeGamesTest.Tools
 
         private static List<ICell> GetBusyNeighboursToLoopWithoutRepeat(this ICell[,] cells, IItem item)
         {
-            Vector2Int position = cells.GetPositionTo(item);
+            GetCellWithSameItemPosition(cells, item, out Vector2Int position);
+            List<ICell> neighbours = new List<ICell>();
 
-            return _directions.Select(direction => position + direction)
-                .Where(neighbourPosition => InBounds(cells, neighbourPosition))
-                .Select(neighbourPosition => cells[neighbourPosition.x, neighbourPosition.y])
-                .Where(neighbour => !neighbour.IsEmpty && !_neighbours.Contains(neighbour)).ToList();
+            foreach (var direction in _directions)
+            {
+                var neighbourPosition = position + direction;
+                if (InBounds(cells, neighbourPosition))
+                {
+                    var neighbour = cells[neighbourPosition.x, neighbourPosition.y];
+                    if (!neighbour.IsEmpty && !_neighbours.Contains(neighbour))
+                        neighbours.Add(neighbour);
+                }
+            }
+
+            return neighbours;
         }
 
         public static bool IsInAny(this ICell[,] cells, IItem item)
         {
             foreach (ICell cell in cells)
             {
-                if (!cell.IsEmpty && cell.FindItemExcept(item) != null && cell.FindItemExcept(item).Position == item.Position)
+                if (cell.FindItem() != null && cell.FindItem().Position == item.Position)
                     return true;
             }
 
