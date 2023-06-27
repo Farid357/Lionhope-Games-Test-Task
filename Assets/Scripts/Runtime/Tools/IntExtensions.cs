@@ -19,12 +19,11 @@ namespace LionhopeGamesTest.Tools
             if (n % 1 == 0)
                 return (int)(n * 2);
 
-            var remainder = number % 3;
+            int remainder = number % 3;
 
             if (remainder > 0)
-            {
                 number -= remainder;
-            }
+            
             return number / 3;
         }
     }

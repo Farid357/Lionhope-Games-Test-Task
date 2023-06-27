@@ -5,12 +5,14 @@ namespace LionhopeGamesTest.Gameplay
 {
     public class Cell : ICell
     {
+        private readonly float _findItemRadius;
         private readonly Collider2D[] _results;
 
-        public Cell(ICellView view)
+        public Cell(ICellView view, float findItemRadius = 0.4f)
         {
             View = view ?? throw new ArgumentNullException(nameof(view));
-            _results = new Collider2D[40];
+            _findItemRadius = findItemRadius;
+            _results = new Collider2D[10];
         }
 
         public bool IsEmpty => FindItem() == null;
@@ -20,7 +22,7 @@ namespace LionhopeGamesTest.Gameplay
         public IItem FindItem()
         {
             Vector2 cellWorldPosition = View.Position;
-            int size = Physics2D.OverlapCircleNonAlloc(cellWorldPosition, 0.4f, _results);
+            int size = Physics2D.OverlapCircleNonAlloc(cellWorldPosition, _findItemRadius, _results);
 
             for (int i = 0; i < size; i++)
             {

@@ -4,13 +4,14 @@ using UnityEngine;
 
 namespace LionhopeGamesTest.Gameplay
 {
-    [RequireComponent(typeof(ItemMovement))]
+    [RequireComponent(typeof(ItemMovement), typeof(SpriteRenderer))]
     public class Item : MonoBehaviour, IItem
     {
-        [SerializeField] private SpriteRenderer _spriteRenderer;
-        
+        [SerializeField, Min(0.1f)] private float _scaleChangeDuration = 0.5f;
+       
+        private SpriteRenderer _spriteRenderer;
         private ItemMovement _movement;
-        
+
         [field: SerializeField] public ItemData Data { get; private set; }
     
         public Vector2 Position => transform.position;
@@ -18,6 +19,7 @@ namespace LionhopeGamesTest.Gameplay
         private void OnEnable()
         {
             _movement ??= GetComponent<ItemMovement>();
+            _spriteRenderer ??= GetComponent<SpriteRenderer>();
         }
 
         public void Init(ItemData data)
@@ -26,7 +28,7 @@ namespace LionhopeGamesTest.Gameplay
             _spriteRenderer.sprite = Data.Sprite;
             Vector3 startScale = transform.localScale;
             transform.localScale = Vector3.zero;
-            transform.DOScale(startScale, 0.5f);
+            transform.DOScale(startScale, _scaleChangeDuration);
         }
 
         public void Teleport(Vector2 position)
@@ -36,7 +38,7 @@ namespace LionhopeGamesTest.Gameplay
 
         public void Disable()
         {
-            transform.DOScale(Vector3.one * 0.03f, 0.5f).OnComplete(() => Destroy(gameObject));
+            transform.DOScale(Vector3.one * 0.03f, _scaleChangeDuration).OnComplete(() => Destroy(gameObject));
         }
     }
 }

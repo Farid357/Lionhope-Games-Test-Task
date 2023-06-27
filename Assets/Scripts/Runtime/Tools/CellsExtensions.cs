@@ -39,15 +39,15 @@ namespace LionhopeGamesTest.Tools
         {
             _neighbours.Clear();
             _neighbours.Add(GetCellWithSameItemPosition(cells, item, out _));
-            return GetBusyNeighboursToLoop(cells, item).Where(cell => cell.FindItem().Data.Level < 3 && cell.FindItem().HasSameData(item)).ToList();
+            return GetBusyNeighboursLoop(cells, item).Where(cell => cell.FindItem().CanBeMerged() && cell.FindItem().HasSameData(item)).ToList();
         }
 
-        private static List<ICell> GetBusyNeighboursToLoop(this ICell[,] cells, IItem item)
+        private static List<ICell> GetBusyNeighboursLoop(this ICell[,] cells, IItem item)
         {
-            foreach (var neighbour in cells.GetBusyNeighboursToLoopWithoutRepeat(item))
+            foreach (var neighbour in cells.GetBusyNeighboursWithoutRepeat(item))
             {
                 _neighbours.Add(neighbour);
-                List<ICell> neighboursToNeighbour = cells.GetBusyNeighboursToLoopWithoutRepeat(neighbour.FindItem());
+                List<ICell> neighboursToNeighbour = cells.GetBusyNeighboursWithoutRepeat(neighbour.FindItem());
 
                 foreach (ICell cell in neighboursToNeighbour)
                 {
@@ -58,7 +58,7 @@ namespace LionhopeGamesTest.Tools
             return _neighbours;
         }
 
-        private static List<ICell> GetBusyNeighboursToLoopWithoutRepeat(this ICell[,] cells, IItem item)
+        private static List<ICell> GetBusyNeighboursWithoutRepeat(this ICell[,] cells, IItem item)
         {
             GetCellWithSameItemPosition(cells, item, out Vector2Int position);
             List<ICell> neighbours = new List<ICell>();
@@ -69,6 +69,7 @@ namespace LionhopeGamesTest.Tools
                 if (InBounds(cells, neighbourPosition))
                 {
                     var neighbour = cells[neighbourPosition.x, neighbourPosition.y];
+                   
                     if (!neighbour.IsEmpty && !_neighbours.Contains(neighbour))
                         neighbours.Add(neighbour);
                 }
@@ -81,7 +82,9 @@ namespace LionhopeGamesTest.Tools
         {
             foreach (ICell cell in cells)
             {
-                if (cell.FindItem() != null && cell.FindItem().Position == item.Position)
+                IItem findItem = cell.FindItem();
+                
+                if (findItem != null && findItem.Position == item.Position)
                     return true;
             }
 

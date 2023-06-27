@@ -46,12 +46,11 @@ namespace LionhopeGamesTest.Gameplay
                 return false;
 
             IItem item = cell.FindItem();
-            int level = item.Data.Level;
 
-            if (level == 3)
+            if (item.CanBeMerged() == false)
                 return false;
 
-            return cells.All(cell1 => !cell1.IsEmpty && cell1.FindItem().HasSameData(item));
+            return cells.All(c => !c.IsEmpty && c.FindItem().HasSameData(item));
         }
 
         public void Merge(List<ICell> cells)

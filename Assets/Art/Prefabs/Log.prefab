@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 4523792788725778142}
   - component: {fileID: 3641735357206271767}
   - component: {fileID: 7870801841571598511}
+  - component: {fileID: 1122428787882973269}
   m_Layer: 0
   m_Name: Log
   m_TagString: MergeBlock
@@ -237,3 +238,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _spriteRenderer: {fileID: 3916758733201242425}
   <Data>k__BackingField: {fileID: 11400000, guid: cfcc663e6207be446babfc86490b6e18, type: 2}
+--- !u!114 &1122428787882973269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207212050967492765}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0b9011340d40549cff8a08fdc48519, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

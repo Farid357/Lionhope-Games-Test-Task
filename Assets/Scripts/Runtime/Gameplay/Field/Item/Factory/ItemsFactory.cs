@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -7,11 +9,14 @@ namespace LionhopeGamesTest.Gameplay
     {
         [SerializeField] private Item _prefab;
 
-        private ItemData[] _allItemsData;
+        private IReadOnlyList<ItemData> _allItemsData;
 
-        private void Awake()
+        public void Init(IReadOnlyList<ItemData> itemsData)
         {
-            _allItemsData = Resources.LoadAll("Data", typeof(ItemData)).Cast<ItemData>().ToArray();
+            if (itemsData.Count == 0)
+                throw new ArgumentException("Value cannot be an empty collection.", nameof(itemsData));
+            
+            _allItemsData = itemsData;
         }
 
         public IItem Create(ItemData mergeItemsData, Vector2 spawnPosition)
@@ -24,9 +29,7 @@ namespace LionhopeGamesTest.Gameplay
         public IItem CreateNextLevelItem(ItemData mergeItemsData, Vector2 spawnPosition)
         {
             ItemData nextData = _allItemsData.First(data => data.Chain == mergeItemsData.Chain && data.Level == mergeItemsData.Level + 1);
-            Item item = Instantiate(_prefab, spawnPosition, Quaternion.identity);
-            item.Init(nextData);
-            return item;
+            return Create(nextData, spawnPosition);
         }
     }
 }

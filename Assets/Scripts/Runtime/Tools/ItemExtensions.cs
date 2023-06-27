@@ -10,5 +10,10 @@ namespace LionhopeGamesTest.Tools
             Chain chain = item.Data.Chain;
             return anotherItem.Data.Level == level && anotherItem.Data.Chain == chain;
         }
+        
+        public static bool CanBeMerged(this IItem item)
+        {
+            return item.Data.Level < 3;
+        }
     }
 }
