@@ -58,7 +58,6 @@ namespace LionhopeGamesTest.Gameplay
             {
                 _field.SelectItemNeighbours(item);
             }
-
             else
             {
                 _field.UnselectCells();
