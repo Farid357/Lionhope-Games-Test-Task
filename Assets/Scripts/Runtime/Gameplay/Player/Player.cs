@@ -1,18 +1,17 @@
 using System;
 using UnityEngine;
-using LionhopeGamesTest.Tools;
 
 namespace LionhopeGamesTest.Gameplay
 {
     public class Player : MonoBehaviour
     {
-        private IField _field;
         private IPlayerInput _input;
+        private Field _field;
         private Vector3 _clickedItemStartPosition;
 
         public static IItem ClickedItem { get; private set; }
 
-        public void Init(IField field, IPlayerInput input)
+        public void Init(Field field, IPlayerInput input)
         {
             _field = field ?? throw new ArgumentNullException(nameof(field));
             _input = input ?? throw new ArgumentNullException(nameof(input));
@@ -29,7 +28,7 @@ namespace LionhopeGamesTest.Gameplay
             if (_input.LeftMouseButtonHeldOn)
                 MoveItem(ClickedItem);
 
-            if (_input.LeftMouseButtonUp && _field.IsItemInAnyOther(ClickedItem))
+            if (_input.LeftMouseButtonUp)
                 PutItem();
         }
 
@@ -53,13 +52,14 @@ namespace LionhopeGamesTest.Gameplay
                 throw new ArgumentNullException(nameof(item));
 
             ClickedItem.Teleport(_input.MouseWorldPosition);
-
+            
             if (_field.IsItemInAnyOther(item))
             {
                 _field.SelectItemNeighbours(item);
             }
             else
             {
+             //   _field.SelectItem(item);
                 _field.UnselectCells();
             }
         }

@@ -7,11 +7,20 @@ using UnityEngine.Tilemaps;
 
 namespace LionhopeGamesTest.Gameplay
 {
-    public class Field : IField
+    public class Field
     {
         private readonly ICell[,] _cells;
         private readonly IItemsFactory _itemsFactory;
         private readonly Tilemap _tilemap;
+        private readonly List<ICell> _neighbours = new();
+
+        private readonly Vector2Int[] _directions =
+        {
+            Vector2Int.down,
+            Vector2Int.up,
+            Vector2Int.left,
+            Vector2Int.right,
+        };
 
         public Field(ICell[,] cells, IItemsFactory itemsFactory, Tilemap tilemap)
         {
@@ -20,11 +29,7 @@ namespace LionhopeGamesTest.Gameplay
             _tilemap = tilemap ? tilemap : throw new ArgumentNullException(nameof(tilemap));
         }
 
-        public List<ICell> FindSameNeighbours(IItem item) => _cells.FindSameNeighboursTo(item);
-
         public bool HasCell(Vector2 position) => _tilemap.HasTile(_tilemap.WorldToCell(position));
-
-        public bool IsItemInAnyOther(IItem item) => _cells.IsInAny(item);
 
         public ICell GetCell(Vector2 position)
         {
@@ -61,7 +66,7 @@ namespace LionhopeGamesTest.Gameplay
             cells.ForEach(cell => cell.FindItem().Disable());
             ItemData itemData = cells.First().FindItem().Data;
             int leftItemsCount = (cells.Count + 1).LeftItemsCount();
-         
+
             for (int i = 0; i < leftItemsCount; i++)
                 _itemsFactory.Create(itemData, cells[i + 1].View.Position);
 
@@ -75,6 +80,101 @@ namespace LionhopeGamesTest.Gameplay
             {
                 cell.View.Unselect();
             }
+        }
+
+        public void Put(IItem item, Vector2 startItemPosition)
+        {
+            UnselectCells();
+
+            Debug.Log(IsItemInAnyOther(item));
+            if (IsItemInAnyOther(item))
+            {
+                List<ICell> neighbours = FindSameNeighboursTo(item);
+
+                if (CanMerge(neighbours))
+                {
+                    Merge(neighbours);
+                    item.Disable();
+                }
+                else
+                {
+                    item.Teleport(startItemPosition);
+                }
+            }
+        }
+
+        public void SelectItemNeighbours(IItem item)
+        {
+            List<ICell> neighbours = FindSameNeighboursTo(item);
+
+            if (CanMerge(neighbours))
+                neighbours.ForEach(cell => cell.View.Select());
+        }
+
+        public void SelectItem(IItem item)
+        {
+            ICell cell = _cells.Cast<ICell>().First(cell => cell.View.Position == item.Position);
+            cell.View.Select();
+        }
+
+        private ICell GetCellWithSameItemPosition(IItem item, out Vector2Int positionInArray)
+        {
+            for (int x = 0; x < _cells.GetLength(0); x++)
+            {
+                for (int y = 0; y < _cells.GetLength(1); y++)
+                {
+                    if (_cells[x, y].FindItem() != null && _cells[x, y].FindItem().Position == item.Position)
+                    {
+                        positionInArray = new Vector2Int(x, y);
+                        return _cells[x, y];
+                    }
+                }
+            }
+
+            throw new InvalidOperationException($"Hasn't found position to {item}");
+        }
+
+        public List<ICell> FindSameNeighboursTo(IItem item)
+        {
+            _neighbours.Clear();
+            _neighbours.Add(GetCellWithSameItemPosition(item, out _));
+            return GetBusyNeighboursLoop(item).Where(cell => cell.FindItem().CanBeMerged() && cell.FindItem().HasSameData(item)).ToList();
+        }
+
+        private List<ICell> GetBusyNeighboursLoop(IItem item)
+        {
+            foreach (var neighbour in GetBusyNeighboursWithoutRepeat(item))
+            {
+                _neighbours.Add(neighbour);
+                List<ICell> neighboursToNeighbour = GetBusyNeighboursWithoutRepeat(neighbour.FindItem());
+
+                foreach (ICell cell in neighboursToNeighbour)
+                {
+                    _neighbours.Add(cell);
+                }
+            }
+
+            return _neighbours;
+        }
+
+        private List<ICell> GetBusyNeighboursWithoutRepeat(IItem item)
+        {
+            GetCellWithSameItemPosition(item, out Vector2Int position);
+
+            return (_directions.Select(direction => position + direction)
+                .Where(InBounds)
+                .Select(neighbourPosition => _cells[neighbourPosition.x, neighbourPosition.y])
+                .Where(neighbour => !neighbour.IsEmpty && !_neighbours.Contains(neighbour))).ToList();
+        }
+
+        public bool IsItemInAnyOther(IItem item)
+        {
+            return _cells.Cast<ICell>().Select(cell => cell.FindItem()).Any(findItem => findItem != null && findItem.Position == item.Position);
+        }
+
+        private bool InBounds(Vector2Int position)
+        {
+            return position.x < _cells.GetLength(0) && position.y < _cells.GetLength(1) && position.x >= 0 && position.y >= 0;
         }
     }
 }

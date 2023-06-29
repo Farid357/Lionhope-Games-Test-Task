@@ -14,7 +14,7 @@ namespace LionhopeGamesTest.Core
         
         private void Awake()
         {
-            IField field = _fieldFactory.Create(width: 10);
+            Field field = _fieldFactory.Create(width: 10);
             IPlayerInput playerInput = new PlayerInput(_camera);
             IReadOnlyList<ItemData> itemsData = Resources.LoadAll("Data", typeof(ItemData)).Cast<ItemData>().ToList();
             

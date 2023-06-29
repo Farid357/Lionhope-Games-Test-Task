@@ -4,23 +4,16 @@ using UnityEngine;
 
 namespace LionhopeGamesTest.Gameplay
 {
-    [RequireComponent(typeof(ItemMovement), typeof(SpriteRenderer))]
     public class Item : MonoBehaviour, IItem
     {
         [SerializeField, Min(0.1f)] private float _scaleChangeDuration = 0.5f;
        
-        private SpriteRenderer _spriteRenderer;
-        private ItemMovement _movement;
+        [SerializeField] private SpriteRenderer _spriteRenderer;
+        [SerializeField] private ItemMovement _movement;
 
         [field: SerializeField] public ItemData Data { get; private set; }
     
         public Vector2 Position => transform.position;
-
-        private void OnEnable()
-        {
-            _movement ??= GetComponent<ItemMovement>();
-            _spriteRenderer ??= GetComponent<SpriteRenderer>();
-        }
 
         public void Init(ItemData data)
         {

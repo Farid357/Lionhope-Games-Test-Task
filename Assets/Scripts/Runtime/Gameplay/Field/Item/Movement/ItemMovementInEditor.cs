@@ -3,18 +3,26 @@ using UnityEngine.Tilemaps;
 
 namespace LionhopeGamesTest.Gameplay
 {
+#if UNITY_EDITOR
+
     [ExecuteInEditMode]
     public sealed class ItemMovementInEditor : MonoBehaviour
     {
-        private Tilemap _tilemap;
+        [SerializeField] private Tilemap _tilemap;
 
-        private void OnEnable()
-        {
-            _tilemap ??= FindObjectOfType<Tilemap>();
-        }
+        private Vector3 _lastPosition;
 
         private void Update()
         {
+            if (_tilemap == null)
+            {
+                Debug.LogWarning("Assign Tilemap in the inspector!");
+                return;
+            }
+
+            if (_lastPosition == transform.position)
+                return;
+
             RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down);
 
             if (hit.collider != null)
@@ -22,8 +30,12 @@ namespace LionhopeGamesTest.Gameplay
                 Vector3Int cellPosition = _tilemap.WorldToCell(hit.point);
 
                 if (_tilemap.HasTile(cellPosition))
-                    transform.position = _tilemap.GetCellCenterWorld(cellPosition);
+                {
+                    transform.position = _tilemap.GetCellCenterWorld(cellPosition);;
+                    _lastPosition = transform.position;
+                }
             }
         }
     }
+#endif
 }

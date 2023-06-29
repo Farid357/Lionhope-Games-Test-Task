@@ -10,7 +10,7 @@ namespace LionhopeGamesTest.Gameplay
         [SerializeField] private Tile _highlightedTile;
         [SerializeField] private ItemsFactory _itemsFactory;
         
-        public IField Create(int width)
+        public Field Create(int width)
         {
             var cells = new ICell[width, width];
             
